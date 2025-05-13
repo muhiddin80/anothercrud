@@ -22,7 +22,6 @@ async function bootstrap() {
 
   const documentFactory = () => SwaggerModule.createDocument(app,config)
   SwaggerModule.setup('api',app,documentFactory);
-  // console.log(process.env.ACCESS_TOKEN_SECRET)
 
   let Port = process.env.APP_PORT? parseInt(process.env.APP_PORT) : 3000;
   await app.listen(Port,()=>{
