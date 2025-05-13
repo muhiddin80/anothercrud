@@ -1,19 +1,53 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, OnModuleInit } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { User } from "./model/user.model";
 import { CreateUserDto } from "./dtos";
 import  * as bcrypt from "bcryptjs"
 import { UpdateUserDto } from "./dtos/update-user.dto";
+import { UserQueryDto } from "./dtos/get-all-user.dto";
+import { Op } from "sequelize";
+import { link } from "fs";
+import { UserRoles } from "./enums";
 
 @Injectable()
-export class UserService {
+export class UserService implements OnModuleInit{
     constructor(@InjectModel(User) private UserModel:typeof User){}
+    async onModuleInit() {
+        await this.seedUsers()
+    }
 
-    async getAll(){
-        const users = await this.UserModel.findAll()
+    async getAll(queries:UserQueryDto){
+        let filters:any = {};
+        if(queries.minAge){
+            filters.age = {
+                [Op.gte]: queries.minAge
+            }
+        }
+        if(queries.maxAge){
+            filters.age = {
+                ...filters.age,
+                [Op.lte]:queries.maxAge
+            }
+        }
+
+        if(queries.role){
+            filters.role = {
+                [Op.eq]:queries.role
+            }
+        }
+        const {count,rows:users} = await this.UserModel.findAndCountAll({
+            limit:queries.limit||10,
+            offset:(queries.page-1)*queries.limit||0,
+            order:queries.sortField? [[queries.sortField,queries.sortOrder||'DESC']] : [['id','ASC']],
+            where:{...filters},
+            attributes:queries.field
+        })
         return {
+            count:count,
             message:"Success!",
             data:users,
+            limit:queries.limit,
+            pageg:queries.page
         }
     }
 
@@ -74,5 +108,35 @@ export class UserService {
             message:"Successfully deleted!",
             data:deletedUser
         }
+    }
+
+    async seedUsers() {
+        const defaultUsers = [
+          {
+            name: 'example',
+            age: 25,
+            email: 'example@gmail.com',
+            password: 'example',
+            role: UserRoles.ADMIN,
+          },
+        ];
+    
+        for (let user of defaultUsers) {
+          const foundedUser = await this.UserModel.findOne({
+            where: { email: user.email },
+          });
+    
+          if (!foundedUser) {
+            const passHash = bcrypt.hashSync(user.password);
+            await this.UserModel.create({
+              name: user.name,
+              role: user.role,
+              age: user.age,
+              email: user.email,
+              password: passHash,
+            });
+          }
+        }
+        console.log("Example admini yaratildi")
     }
 }

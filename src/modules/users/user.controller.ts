@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dtos";
 import { UpdateUserDto } from "./dtos/update-user.dto";
@@ -8,6 +8,7 @@ import { Roles } from "src/decorators/role.decorator";
 import { UserRoles } from "./enums";
 import { CheckAuth } from "src/guards/check.token.guard";
 import { CheckRolesGuard } from "src/guards/check.role.guard";
+import { UserQueryDto } from "./dtos/get-all-user.dto";
 
 @Controller('users')
 @UseGuards(CheckAuth,CheckRolesGuard)
@@ -17,8 +18,8 @@ export class UserController{
     @Get()
     @Protected(true)
     @Roles([UserRoles.ADMIN])
-    async getAll(){
-        return this.service.getAll()
+    async getAll(@Query() queries:UserQueryDto){
+        return this.service.getAll(queries)
     }
 
     @ApiBearerAuth()

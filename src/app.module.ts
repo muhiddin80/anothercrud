@@ -2,12 +2,20 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ProductModule, UserModule } from './modules';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import * as path from "node:path"
+import { APP_FILTER } from '@nestjs/core';
+import { HttpExceptionFilter } from './filters/exception.filter';
 
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal:true
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: path.join(process.cwd(),'uploads'),
+      serveRoot:'/uploads'
     }),
     SequelizeModule.forRoot({
       dialect:"postgres",
@@ -22,5 +30,11 @@ import { ProductModule, UserModule } from './modules';
     UserModule,
     ProductModule
   ],
+  providers:[
+    {
+      provide:APP_FILTER,
+      useClass:HttpExceptionFilter
+    }
+  ]
 })
 export class AppModule {}

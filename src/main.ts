@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { HttpExceptionFilter } from './filters/exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -22,7 +23,7 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app,config)
   SwaggerModule.setup('api',app,documentFactory);
   // console.log(process.env.ACCESS_TOKEN_SECRET)
-  
+
   let Port = process.env.APP_PORT? parseInt(process.env.APP_PORT) : 3000;
   await app.listen(Port,()=>{
     console.log(`http://localhost:${Port}`)
