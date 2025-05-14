@@ -35,11 +35,13 @@ export class UserQueryDto {
 
     @ApiProperty({required:false,example:sortField.age})
     @IsEnum(sortField)
-    sortField:sortField;
+    @IsOptional()
+    sortField?:sortField;
 
     @ApiProperty({required:false,example:'ASC'})
     @IsIn(['ASC','DESC'])
-    sortOrder:'ASC'|'DESC';
+    @IsOptional()
+    sortOrder?:'ASC'|'DESC';
 
     @ApiProperty({
         type:'number',

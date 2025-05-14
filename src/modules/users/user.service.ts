@@ -47,7 +47,7 @@ export class UserService implements OnModuleInit{
             message:"Success!",
             data:users,
             limit:queries.limit,
-            pageg:queries.page
+            page:queries.page
         }
     }
 
@@ -67,7 +67,7 @@ export class UserService implements OnModuleInit{
             password:passwordHash
         })
         return {
-            message:"Succcessfully created!",
+            message:"Successfully created!",
             data:user,
         }
     }
@@ -86,7 +86,8 @@ export class UserService implements OnModuleInit{
             age:payload.age || founded.dataValues.age,
             password:passwordHash || founded.dataValues.password,
         },
-        {where:{id:id}})
+        {where:{id:id},
+        returning:true})
         return {
             message:"Successfully updated!",
             data:updatedUser

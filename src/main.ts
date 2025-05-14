@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { HttpExceptionFilter } from './filters/exception.filter';
 
 async function bootstrap() {
@@ -13,6 +13,12 @@ async function bootstrap() {
       forbidNonWhitelisted:false,
     })
   )
+
+  app.enableVersioning({
+    type:VersioningType.URI,
+    defaultVersion:'1',
+    prefix:'v-'
+  });
   const config = new DocumentBuilder()
     .setTitle('User Api')
     .setDescription("Crud for user")
