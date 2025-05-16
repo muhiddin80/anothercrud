@@ -7,6 +7,7 @@ export class CheckMimetype implements PipeTransform{
         this.mimetype=mimetype
     }
     transform(value: Express.Multer.File, metadata: ArgumentMetadata) {
+        if (!value) return value;
         if(!this.mimetype.includes(value.originalname.split('.').at(-1) as string)){
             throw new BadRequestException('You must only send jpg and png files!')
         }

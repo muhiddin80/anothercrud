@@ -11,7 +11,7 @@ import { CheckRolesGuard } from "src/guards/check.role.guard";
 import { UserQueryDto } from "./dtos/get-all-user.dto";
 
 @Controller('users')
-@UseGuards(CheckAuth,CheckRolesGuard)
+// @UseGuards(CheckAuth,CheckRolesGuard)
 export class UserController{
     constructor(private service:UserService){}
     @ApiBearerAuth()

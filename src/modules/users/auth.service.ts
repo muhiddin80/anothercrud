@@ -27,7 +27,6 @@ export class AuthService {
         if(!isMatch){
             throw new BadRequestException("Invalid password!");
         }
-        // console.log(foundedUser.dataValues)
     
         const {token} = await this.JwtHelper.generateToken({id:foundedUser.id,role:foundedUser.dataValues.role})
         return {

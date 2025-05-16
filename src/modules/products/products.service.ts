@@ -70,7 +70,9 @@ export class ProductService {
         if(!founded){
             throw new BadRequestException("This product does not exist!");
         }
-        await this.fs.deleteFile(founded.dataValues.image)
+        if(founded.dataValues.image.length>1){
+            await this.fs.deleteFile(founded.dataValues.image)
+        }
 
         let imageName:string = '';
         if(image){
@@ -94,7 +96,9 @@ export class ProductService {
             throw new BadRequestException("This product does not exist!");
         }
 
-        await this.fs.deleteFile(founded.dataValues.image)
+        if(founded.dataValues.image.length>1){
+            await this.fs.deleteFile(founded.dataValues.image)
+        }
 
         const deletedProduct = await this.ProductModel.destroy({
             where:{id:id}

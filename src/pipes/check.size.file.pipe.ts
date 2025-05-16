@@ -8,6 +8,7 @@ export class CheckFileSize implements PipeTransform{
     }
 
     transform(value: Express.Multer.File, metadata: ArgumentMetadata) {
+        if (!value) return value;
         if(this.size<value.size){
             throw new BadRequestException("Send file with smaller size!")
         }

@@ -27,7 +27,7 @@ export class UserService implements OnModuleInit{
             filters.age = {
                 ...filters.age,
                 [Op.lte]:queries.maxAge
-            }
+            }   
         }
 
         if(queries.role){

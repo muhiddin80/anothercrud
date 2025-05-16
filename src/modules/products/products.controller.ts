@@ -12,7 +12,7 @@ import { CheckAuth } from "src/guards/check.token.guard";
 import { CheckRolesGuard } from "src/guards/check.role.guard";
 
 @Controller('products')
-@UseGuards(CheckAuth,CheckRolesGuard)
+// @UseGuards(CheckAuth,CheckRolesGuard)
 export class ProductController {
     constructor(private service:ProductService){}
 
@@ -85,7 +85,7 @@ export class ProductController {
           }
         }
       })
-    async updateImage(@UploadedFile(new CheckFileSize(1000000*3),new CheckMimetype(['png','jpg'])) image:Express.Multer.File,
+    async updateImage(@UploadedFile(new CheckFileSize(1000000*3),new CheckMimetype(['png','jpg','avif'])) image:Express.Multer.File,
         @Param('id',ParseIntPipe) id:number){
             return this.service.updateImage(id,image)
         }
